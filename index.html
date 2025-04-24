@@ -4,11 +4,182 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Prediksi Azore</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #1e1e2f;
+      color: #f0f0f0;
+      transition: background 0.5s, color 0.5s;
+    }
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    /* Header yang lebih menarik */
+    .judul {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #fff;
+      padding: 25px;
+      font-size: 2.5rem;
+      font-weight: bold;
+      background: linear-gradient(45deg, #00c0ff, #0088cc);
+      border-radius: 15px;
+      border: 5px solid #00c0ff;
+      box-shadow: 0 0 25px rgba(0, 200, 255, 0.5);
+      transition: all 0.4s ease;
+      text-transform: uppercase;
+    }
+
+    .judul:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 35px rgba(0, 200, 255, 0.8);
+      background: linear-gradient(45deg, #0088cc, #00c0ff);
+    }
+
+    .judul:active {
+      transform: scale(1);
+    }
+
+    /* End Header */
+    .form-container {
+      background: #29293d;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .form-group {
+      flex: 1 1 200px;
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input, select, button {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+    button {
+      background: #00c0ff;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #0088cc;
+    }
+    .hasil {
+      background: #2e2e45;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 10px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+    }
+    .riwayat {
+      margin-top: 25px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: #00c0ff;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #444;
+    }
+    th {
+      background: #0088cc;
+    }
+    .screenshot-button {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    #popupScreenshot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .popup-content {
+      background: #fff;
+      color: #000;
+      padding: 20px;
+      border-radius: 10px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .popup-content table {
+      color: #000;
+    }
+    .popup-content button {
+      background: #dc3545;
+      margin-top: 10px;
+    }
+
+    /* Toggle theme */
+    .theme-toggle {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+      gap: 15px;
+      animation: fadeIn 0.5s;
+    }
+
+    .theme-button {
+      padding: 10px 20px;
+      background: #0088cc;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.3s ease;
+    }
+
+    .theme-button:hover {
+      transform: scale(1.1);
+    }
+
+    /* Animasi untuk perubahan tema */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1 class="judul">Prediction Azore</h1>
+    <h1 class="judul">Prediction Azore</h1> <!-- Header yang sudah diperbarui -->
     <div class="form-container">
       <div class="form-row">
         <div class="form-group">
@@ -66,7 +237,6 @@
 
     <div class="riwayat">
       <h2>Riwayat Prediksi</h2>
-      <button onclick="clearAllRiwayat()">Clear All</button>
       <table>
         <thead>
           <tr>
@@ -78,7 +248,6 @@
             <th>Over/Under</th>
             <th>Ganjil/Genap</th>
             <th>Skor</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody id="riwayat"></tbody>
@@ -87,6 +256,13 @@
       <div class="screenshot-button">
         <button onclick="tampilkanScreenshotMode()">Tampilkan Versi Screenshot</button>
       </div>
+    </div>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+      <button class="theme-button" onclick="setTheme('dark')">Gelap</button>
+      <button class="theme-button" onclick="setTheme('light')">Putih</button>
+      <button class="theme-button" onclick="setTheme('yellow')">Kuning</button>
     </div>
   </div>
 
@@ -112,6 +288,81 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    function prediksi() {
+      const teamA = document.getElementById('teamA').value;
+      const teamB = document.getElementById('teamB').value;
+      const mode = document.getElementById('mode').value;
+      const pasaran = parseFloat(document.getElementById('pasaran').value);
+      const oddsOver = parseFloat(document.getElementById('oddsOver').value);
+      const oddsUnder = parseFloat(document.getElementById('oddsUnder').value);
+      const teamAGoals = parseInt(document.getElementById('teamAGoals').value);
+      const teamAConceded = parseInt(document.getElementById('teamAConceded').value);
+      const teamBGoals = parseInt(document.getElementById('teamBGoals').value);
+      const teamBConceded = parseInt(document.getElementById('teamBConceded').value);
+
+      const rataGol = ((teamAGoals + teamBGoals) + (teamAConceded + teamBConceded)) / 20;
+      const totalSkor = rataGol * (mode === "fulltime" ? 1 : 0.5);
+      let hasilOU = totalSkor > pasaran ? "Over" : "Under";
+      let hasilGG = Math.round(totalSkor) % 2 === 0 ? "Genap" : "Ganjil";
+      let prediksiMenang = teamAGoals > teamBGoals ? teamA : (teamAGoals < teamBGoals ? teamB : "Draw");
+
+      document.getElementById("result").innerHTML = `
+        <div class="hasil">
+          <strong>${teamA} vs ${teamB}</strong><br>
+          <b>Mode:</b> ${mode}<br>
+          <b>Prediksi:</b> ${prediksiMenang}<br>
+          <b>Over/Under:</b> ${hasilOU} (${totalSkor.toFixed(2)})<br>
+          <b>Ganjil/Genap:</b> ${hasilGG}<br>
+        </div>
+      `;
+
+      tambahRiwayat(teamA, teamB, mode, prediksiMenang, hasilOU, hasilGG, totalSkor.toFixed(1));
+    }
+
+    let nomor = 1;
+    function tambahRiwayat(teamA, teamB, mode, menang, ou, gg, skor) {
+      const riwayat = document.getElementById('riwayat');
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${nomor}</td>
+        <td>${teamA}</td>
+        <td>${teamB}</td>
+        <td>${mode}</td>
+        <td>${menang}</td>
+        <td>${ou}</td>
+        <td>${gg}</td>
+        <td>${skor}</td>
+      `;
+      riwayat.appendChild(row);
+
+      const rowScreenshot = row.cloneNode(true);
+      document.getElementById("riwayatScreenshot").appendChild(rowScreenshot);
+      nomor++;
+    }
+
+    function tampilkanScreenshotMode() {
+      document.getElementById("popupScreenshot").style.display = "flex";
+    }
+
+    function tutupScreenshotMode() {
+      document.getElementById("popupScreenshot").style.display = "none";
+    }
+
+    function setTheme(theme) {
+      const body = document.body;
+
+      if (theme === 'dark') {
+        body.style.background = "#1e1e2f";
+        body.style.color = "#f0f0f0";
+      } else if (theme === 'light') {
+        body.style.background = "#fff";
+        body.style.color = "#000";
+      } else if (theme === 'yellow') {
+        body.style.background = "#ffeb3b";
+        body.style.color = "#000";
+      }
+    }
+  </script>
 </body>
 </html>
